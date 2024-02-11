@@ -2,22 +2,44 @@ const express=require('express')
 const app=express();
 const mongoose=require("mongoose");
 const path=require("path");
+const Listing=require("./models/listings.js");
 const ejsMate=require("ejs-mate");
 var methodOverride = require('method-override');
 app.set("view engine","ejs");
 app.set("views",path.join(__dirname,"views"));
 app.use(express.static(path.join(__dirname,"/public")));
-app.engine("ejs",ejsMate);
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
-main().then(() => console.log('Connected to MongoDB!'))
-.catch(err => console.log(err));
+app.engine('ejs', ejsMate);
+const Mongo_url="mongodb://127.0.0.1:27017/cipherthon";
+
+main().then(() => {
+    console.log("connected to mongodb")
+})
+.catch(err =>{
+     console.log(err)
+});
 
 async function main() {
-  await mongoose.connect('mongodb://127.0.0.1:27017/cipherthon');
+  await mongoose.connect(Mongo_url);
 }
+//root route
 app.get('/',(req,res)=>{
-  res.render("./listings/index.ejs");
+  res.send("hello world");
+});
+//listings route
+app.get("/listings",async(req,res)=>{
+    const listings=await Listing.find({});
+    res.render("./listings/index.ejs",{listings});
+});
+//new route
+app.get("/listings/new",(req,res)=>{
+    res.render("./listings/new.ejs");
+});
+app.post("/listings",async(req,res)=>{
+    const listing=new Listing(req.body);
+    await listing.save();
+    res.redirect("/listings");
 });
 app.listen(8080,()=>{
     console.log('server started at port 8080');
