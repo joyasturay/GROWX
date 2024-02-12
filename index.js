@@ -41,6 +41,12 @@ app.post("/listings",async(req,res)=>{
     await listing.save();
     res.redirect("/listings");
 });
+//show route
+app.get("/listings/:id",async(req,res)=>{
+    let {id}=req.params;
+    const listing=await Listing.findById(id);
+    res.render("./listings/show.ejs",{listing});
+});
 app.listen(8080,()=>{
     console.log('server started at port 8080');
 });
