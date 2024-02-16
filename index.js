@@ -2,15 +2,43 @@ const express=require('express')
 const app=express();
 const mongoose=require("mongoose");
 const path=require("path");
-const Listing=require("./models/listings.js");
+const listingRouter=require("./routes/listings.js");
+const announcementsRouter=require("./routes/announcement.js");
+const session=require("express-session");
+const flash=require("connect-flash");
 const ejsMate=require("ejs-mate");
 var methodOverride = require('method-override');
+const wrapAsync=require("./utils/wrapAsync.js");
+const ExpressError=require("./utils/ExpressError.js");
+
 app.set("view engine","ejs");
 app.set("views",path.join(__dirname,"views"));
 app.use(express.static(path.join(__dirname,"/public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 app.engine('ejs', ejsMate);
+
+const expressSession={
+    secret:"keyboard cat",
+    resave:false,
+    saveUninitialized:true,
+    cookie:{
+      expires:Date.now()+1000*60*60*24*7,
+      maxAge:1000*60*60*24*7,
+      httpOnly:true,
+    }
+  };
+
+  app.use(session(expressSession));
+  app.use(flash());
+  app.use((req,res,next)=>{
+    res.locals.success=req.flash("success");
+    res.locals.error=req.flash("error");
+    next();
+});
+app.use("/listings",listingRouter);
+app.use("/listings/:id/announcements",announcementsRouter);
+
 const Mongo_url="mongodb://127.0.0.1:27017/cipherthon";
 
 main().then(() => {
@@ -25,29 +53,19 @@ async function main() {
 }
 //root route
 app.get('/',(req,res)=>{
-  res.send("hello world");
+  res.render("./listings/home.ejs");
 });
-//listings route
-app.get("/listings",async(req,res)=>{
-    const listings=await Listing.find({});
-    res.render("./listings/index.ejs",{listings});
+//error route
+app.all("*",(req,res,next)=>{
+    next(new ExpressError(404,"Page not found"));
 });
-//new route
-app.get("/listings/new",(req,res)=>{
-    res.render("./listings/new.ejs");
+app.use((err,req,res,next)=>{
+    let {statusCode=404,message="Page not found"}=err;
+    res.status(statusCode).render("./listings/error.ejs",{err});
 });
-app.post("/listings",async(req,res)=>{
-    const listing=new Listing(req.body);
-    await listing.save();
-    res.redirect("/listings");
-});
-//show route
-app.get("/listings/:id",async(req,res)=>{
-    let {id}=req.params;
-    const listing=await Listing.findById(id);
-    res.render("./listings/show.ejs",{listing});
-});
+
+  
 app.listen(8080,()=>{
-    console.log('server started at port 8080');
+    console.log("listening on port 8080");
 });
 
