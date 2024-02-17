@@ -1,15 +1,31 @@
 <nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
     <div class="container-fluid">
-      <a class="navbar-brand" href="/">Cipherthon</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <a class="navbar-brand" href="/"><img src="https://i.ibb.co/5873fRs/GrowX-1.png" alt="GrowX-1" border="0" width="80" height="50"></a>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup" style="background-color: white;">
         <div class="navbar-nav">
           <a class="nav-link"  href="/">Home</a>
           <a class="nav-link" href="/listings">Classrooms</a>
           <a class="nav-link" href="/listings/new">New Classroom</a>
-          <a class="nav-link" href="/">Help center</a>
+          <a class="nav-link" href="/listings/help">Help center</a>
+        </div>
+        <div class="navbar-nav ms-auto">
+          <%if(!currUser){%>
+            <div class="dropdown">
+              <button class="btn btn-outline-dark btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style=" background-color: #ff5f4a; color:white; border:none;">
+                Login
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="/signup">SignUp</a></li>
+                <li><a class="dropdown-item" href="/login">SignIn</a></li>
+              </ul>
+            </div>
+          <%}%>
+          <%if(currUser){%>
+          <a class="nav-link" href="/logout" style="font-size:18px;background-color:#ff5f4a;color:white !important; border-radius: 25px;padding:6px 10px;">logout</a>
+          <%} %>
         </div>
       </div>
     </div>

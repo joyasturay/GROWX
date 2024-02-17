@@ -1,6 +1,7 @@
 const mongoose=require("mongoose");
 const Schema=mongoose.Schema;
 const Announcement=require("./announcement.js");
+const User=require("./user.js");
 
 const listingSchema=new Schema({
     batchname:{
@@ -29,6 +30,17 @@ const listingSchema=new Schema({
         type:Schema.Types.ObjectId,
         ref:"Announcement",
     }],
+    owner:{
+        type:Schema.Types.ObjectId,
+        ref:"User",
+    }
+    
+});
+listingSchema.post("findOneAndDelete",async function(listing){
+    if(listing){
+        const announcements=await Announcement.deleteMany({_id:{$in:listing.announcements}});
+        console.log(announcements);
+    }
     
 });
 const Listing=mongoose.model("Listing",listingSchema);

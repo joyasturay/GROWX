@@ -1,4 +1,4 @@
-<%layout("/layouts/boilerplateclassroom.ejs")%>
+<%layout("/layouts/boilerplate.ejs")%>
       
       <div class="row mt-3">
         <div class="col-8 offset-3">
@@ -7,6 +7,7 @@
         <div class="card col-6 offset-3 show-card">
             <img src="<%=listing.image%>" class="card-img-top show-img" alt="listing">
             <div class="card-body">
+              <p class="card-title">Classroom created By:<b><%=listing.owner.username%></b></p>
               <p class="card-text">
                 <%=listing.description%>
                 <br />    
@@ -19,14 +20,19 @@
           </div>
         
         </div>
+        <h5 class="offset-3">Features:</h5>
+        
         <div class="btns">
             <a href="/listings/<%=listing._id%>/edit" class="btn  btn-dark edit-btn offset-3 mb-3">Edit Listing</a>
              <form method="POST" action="/listings/<%=listing._id%>?_method=DELETE">
             <button class="btn btn-dark mb-3">Delete</button>
           </form>
+          <a href="/listings/<%=listing._id%>/video" class="btn  btn-dark edit-btn  mb-3">Join Video</a>
+          <a href="/listings/<%=listing._id%>/assignments" class="btn  btn-dark edit-btn  mb-3">Assignment</a>
         </div>
-        <hr />
+        
         <div class="col-8 offset-3 mb-3">
+          <hr />
           <h4>Announce something to your class</h4>
           <form method="POST" action="/listings/<%=listing._id%>/announcements" novalidate class="needs-validation">
             <div class="mb-3">
