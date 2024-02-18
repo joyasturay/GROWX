@@ -71,13 +71,14 @@ app.get('/',(req,res)=>{
   }
 });
 app.post('/', (req, res) => {
+  console.log(req.body);
   req.flash('success', 'Successfully submitted the review');
   res.redirect('/');
 });
 //error route
-// app.all("*",(req,res,next)=>{
-//     next(new ExpressError(404,"Page not found"));
-// });
+ app.all("*",(req,res,next)=>{
+     next(new ExpressError(404,"Page not found"));
+ });
 app.use((err,req,res,next)=>{
     let {statusCode=404,message="Page not found"}=err;
     res.status(statusCode).render("./listings/error.ejs",{err});

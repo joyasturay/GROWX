@@ -20,19 +20,16 @@
           </div>
         
         </div>
-        <h5 class="offset-3">Features:</h5>
         
+        <h5 class="offset-3">Features for Classroom Owner:</h5>
         <div class="btns">
-          <%if(currUser && currUser._id.equals(listing.owner._id)){%>
             <a href="/listings/<%=listing._id%>/edit" class="btn  btn-dark edit-btn offset-3 mb-3"><i class="fa-regular fa-pen-to-square"></i> Edit Listing</a>
              <form method="POST" action="/listings/<%=listing._id%>?_method=DELETE">
             <button class="btn btn-danger mb-3"><i class="fa-solid fa-trash"></i> Delete</button>
           </form>
-          <%}%>
-          <a href="/listings/<%=listing._id%>/video" class="btn  btn-dark edit-btn offset-3 mb-3"><i class="fa-solid fa-video"></i> Join Video</a>
+          <a href="/listings/<%=listing._id%>/video" class="btn  btn-dark edit-btn  mb-3"><i class="fa-solid fa-video"></i> Join Video</a>
           <a href="/listings/<%=listing._id%>/assignments" class="btn  btn-dark edit-btn  mb-3">Assignment</a>
         </div>
-        
         <div class="col-8 offset-3 mb-3">
           <hr />
           <h4>Announce something to your class</h4>
@@ -51,9 +48,7 @@
           <%for(review of listing.announcements){ %>
             <div class="card mb-3 col-5 ms-3">
               <div class="card-body">
-                <p class="card-text">
-                  <%=review.comment%>
-                </p>
+                <p class="card-text"><%=review.comment.toUpperCase()%></p>
               </div>
               <form class="mb-3" method="POST" action="/listings/<%=listing._id%>/announcements/<%=review._id%>?_method=DELETE">
                 <button  class="btn btn-outline-dark btn-sm ">Delete</button>
