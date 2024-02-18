@@ -1,9 +1,9 @@
 const express=require('express')
 const app=express();
 const mongoose=require("mongoose");
-const ExpressError = require('./utils/Expresserror.js');
-const wrapAsync = require(path.join(__dirname, 'utils', 'wrapAsync'));
 const path=require("path");
+const wrapAsync = require('./utils/wrapAsync.js'); 
+const ExpressError = require('./utils/ExpressError.js');
 const listingRouter=require("./routes/listings.js");
 const announcementsRouter=require("./routes/announcement.js");
 const userRouter=require("./routes/user.js");
@@ -14,7 +14,6 @@ var methodOverride = require('method-override');
 const passport=require("passport");
 const LocalStrategy=require("passport-local");
 const User=require("./models/user.js");
-
 
 app.set("view engine","ejs");
 app.set("views",path.join(__dirname,"views"));
@@ -67,11 +66,18 @@ async function main() {
 //root route
 app.get('/',(req,res)=>{
   res.render("./listings/home.ejs");
+  if({...req.body}){
+    req.flash("success","Successfull");
+  }
+});
+app.post('/', (req, res) => {
+  req.flash('success', 'Successfully submitted the review');
+  res.redirect('/');
 });
 //error route
-app.all("*",(req,res,next)=>{
-    next(new ExpressError(404,"Page not found"));
-});
+// app.all("*",(req,res,next)=>{
+//     next(new ExpressError(404,"Page not found"));
+// });
 app.use((err,req,res,next)=>{
     let {statusCode=404,message="Page not found"}=err;
     res.status(statusCode).render("./listings/error.ejs",{err});

@@ -1,11 +1,15 @@
 const express=require("express");
 const router=express.Router();
 const wrapAsync=require("../utils/wrapAsync.js");
-const ExpressError=require("../utils/Expresserror.js");
+const ExpressError=require("../utils/ExpressError.js");
 const {listingSchema}=require("../schema.js");
 const Listing=require("../models/listings.js");
 const loggedin=require("../middleware.js").loggedin;
 const isOwner=require("../middleware.js").isOwner;
+const Assignment = require('../models/assignment.js');
+const multer = require('multer');
+const storage = multer.memoryStorage(); 
+const upload = multer({ storage: storage });
 const validateListing=(req,res,next)=>{
     let {error}=listingSchema.validate(req.body);
     if(error){
@@ -14,7 +18,6 @@ const validateListing=(req,res,next)=>{
     }else{
         next();
     }
-
 };
 //listings route
 router.get("/",wrapAsync(async(req,res)=>{
@@ -76,5 +79,58 @@ router.get("/:id/video",loggedin,wrapAsync(async(req,res)=>{
     const listing=await Listing.findById(id);
     res.render("./listings/video.ejs",{listing});
 }));
+// Render form for submitting assignments
+router.get('/:id/assignments', loggedin,(req, res) => {
+    const { id } = req.params;
+    const message = req.flash('success');
+    const messageType = 'success';
+    res.render('./listings/assignmentForm.ejs', { listingId: id, message, messageType });
+});
+    // Handle assignment submission
+router.post('/:id/assignments', upload.single('assignmentFile'), (req, res) => {
+    const { id } = req.params;
+    const file = req.file;
+
+    if (file) {
+        // Save the assignment to the database
+        const newAssignment = new Assignment({
+            listingId: id,
+            file: {
+                data: file.buffer,
+                contentType: file.mimetype,
+            },
+        });
+
+        newAssignment.save()
+            .then(savedAssignment => {
+                console.log('Assignment saved:', savedAssignment);
+                req.flash('success', 'Assignment submitted successfully!');
+                res.redirect(`/listings/${id}/assignments`);
+            })
+            .catch(error => {
+                console.error('Error saving assignment:', error);
+                req.flash('error', 'Error submitting assignment.');
+                res.redirect(`/listings/${id}/assignments`);
+            });
+    } else {
+        console.error('Multer upload error:', req.fileValidationError);
+        req.flash('error', 'Error submitting assignment. Please select a valid PDF file.');
+        res.redirect(`/listings/${id}/assignments`);
+    }
+});
+
+router.get('/:id/seeassignments', (req, res) => {
+    const { id } = req.params;
+    Assignment.find({ listingId: id })
+        .then(assignments => {
+            console.log('Assignments:', assignments);
+            res.render('./listings/viewAssignments.ejs', {assignments});
+        })
+        .catch(error => {
+            console.error('Error fetching assignments:', error);
+            res.status(500).send('Internal Server Error: ' + error.message);
+        });
+});
+
 
 module.exports=router;
