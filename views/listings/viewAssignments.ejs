@@ -1,0 +1,13 @@
+<% layout("/layouts/boilerplate.ejs") %>
+
+<h3>View Submitted Assignments</h3>
+
+<iframe src="https://pdfobject.com/pdf/sample.pdf" width="100%" height="600px"></iframe>
+<h4 class="mt-3">Feedback</h4>
+<form method="POST" action ="/">
+    <label for="Total marks" class="form-label">Total marks</label>
+    <input type="range" name="Total marks" min="0" max="10" step="1" class="form-range" required>
+    <textarea class="form-control" rows="5" cols="50" name="review" placeholder="Review for this assignment" required></textarea>
+    <button class="btn btn-dark mt-3">Submit</button>
+</form>
+

@@ -1,0 +1,17 @@
+<% layout("/layouts/boilerplate.ejs") %>
+
+<h1>Submit Assignment</h1>
+
+<% if (message) { %>
+    <div class="<%= messageType %>">
+        <%= message %>
+    </div>
+<% } %>
+
+<form action="/listings/<%= listingId %>/assignments" method="POST" enctype="multipart/form-data" class="mb-3">
+    <label for="assignmentFile" class="form-label">Select Assignment File:</label>
+    <input type="file" name="assignmentFile" accept=".pdf" required  class="form-control"/>
+    <button type="submit" class="btn btn-outline-dark mt-3">Submit Assignment</button>
+</form>
+
+<a href="/listings/<%= listingId %>/seeassignments">View Submitted Assignments</a>
