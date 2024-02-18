@@ -92,8 +92,7 @@ router.post('/:id/assignments', upload.single('assignmentFile'), (req, res) => {
     const file = req.file;
 
     if (file) {
-        // Save the assignment to the database
-        const newAssignment = new Assignment({
+       const newAssignment = new Assignment({
             listingId: id,
             file: {
                 data: file.buffer,
