@@ -1,6 +1,6 @@
 #GrowX
 A one stop solution  for streamlined assignment submission  for students and get a personalised review for your submitted assignment and one to one interaction with class teacher.
-#Packages Installed
+#Packages 
 use npm install command to install packages
 #Features
 Assignment submission,personalised reviews ,public announcements by teacher,one to one doubt solving and assignment related discussions
