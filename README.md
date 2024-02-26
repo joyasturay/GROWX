@@ -12,4 +12,4 @@ nodemon index.js
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin feature/your-feature`)
 5. Open a pull request
-Collab Project with https://github.com/jitinkumarchak
+6.Collab Project with https://github.com/jitinkumarchak
